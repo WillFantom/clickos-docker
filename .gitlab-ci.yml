@@ -25,7 +25,7 @@ build:
   - name: docker:stable-dind
   script:
     - "docker build -f Dockerfile --rm --compress --no-cache \
-        --build-arg EXTRA_FLAGS=${EXTRA_FLAGS} --build-arg STATS_LEVEL=${STATS_LEVEL} \
+        --build-arg EXTRA_FLAGS=\"${EXTRA_FLAGS}\" --build-arg STATS_LEVEL=${STATS_LEVEL} \
         --build-arg CLICKOS_BR=${CLICKOS_BR} --build-arg CLICKOS_REPO=${CLICKOS_REPO} \
         --build-arg MINIOS_BR=${MINIOS_BR} --build-arg MINIOS_REPO=${MINIOS_REPO} \
         --build-arg TOOLCHAIN_BR=${TOOLCHAIN_BR} --build-arg TOOLCHAIN_REPO=${TOOLCHAIN_REPO} \
