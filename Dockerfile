@@ -41,6 +41,9 @@ RUN make -j all
 ENV LWIP_ROOT "${TOOLCHAIN_ROOT}/x86_64-root/x86_64-xen-elf"
 ENV NEWLIB_ROOT "${TOOLCHAIN_ROOT}/x86_64-root/x86_64-xen-elf"
 
+## Allow for Partial Caching
+ARG CACHE_TWEAK="Add the date to this arg to break the cache here"
+
 ## Pull ClickOS
 ARG CLICKOS_BR=persistent-grants
 ARG CLICKOS_REPO=https://github.com/willfantom/clickos

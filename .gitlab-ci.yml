@@ -23,8 +23,27 @@ build:
   stage: build
   services:
   - name: docker:stable-dind
+  except:
+    - triggers
   script:
     - "docker build -f Dockerfile --rm --compress --no-cache \
+        --build-arg EXTRA_FLAGS=\"${EXTRA_FLAGS}\" --build-arg STATS_LEVEL=${STATS_LEVEL} \
+        --build-arg CLICKOS_BR=${CLICKOS_BR} --build-arg CLICKOS_REPO=${CLICKOS_REPO} \
+        --build-arg MINIOS_BR=${MINIOS_BR} --build-arg MINIOS_REPO=${MINIOS_REPO} \
+        --build-arg TOOLCHAIN_BR=${TOOLCHAIN_BR} --build-arg TOOLCHAIN_REPO=${TOOLCHAIN_REPO} \
+        --build-arg XEN_BR=${XEN_BR} --build-arg XEN_REPO=${XEN_REPO} \
+        --tag ${DOCKER_IMG}:${TAG} ."
+    - docker push ${DOCKER_IMG}:${TAG}
+
+build-partial-cache:
+  stage: build
+  services:
+  - name: docker:stable-dind
+  only:
+    - triggers
+  script:
+    - docker pull ${DOCKER_IMG}:${TAG} || true
+    - "docker build -f Dockerfile --rm --compress --build-arg CACHE_TWEAK=$(date) \ 
         --build-arg EXTRA_FLAGS=\"${EXTRA_FLAGS}\" --build-arg STATS_LEVEL=${STATS_LEVEL} \
         --build-arg CLICKOS_BR=${CLICKOS_BR} --build-arg CLICKOS_REPO=${CLICKOS_REPO} \
         --build-arg MINIOS_BR=${MINIOS_BR} --build-arg MINIOS_REPO=${MINIOS_REPO} \
