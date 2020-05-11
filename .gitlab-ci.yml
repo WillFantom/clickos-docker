@@ -4,10 +4,6 @@ stages:
   - build
 
 variables:
-  EXTRA_FLAGS: ""
-  STATS_LEVEL: 0
-  CLICKOS_BR: persistent-grants
-  CLICKOS_REPO: https://github.com/willfantom/clickos
   MINIOS_BR: master
   MINIOS_REPO: https://github.com/sysml/mini-os
   TOOLCHAIN_BR: master
@@ -27,8 +23,6 @@ build:
     - triggers
   script:
     - "docker build -f Dockerfile --rm --compress --no-cache \
-        --build-arg EXTRA_FLAGS=\"${EXTRA_FLAGS}\" --build-arg STATS_LEVEL=${STATS_LEVEL} \
-        --build-arg CLICKOS_BR=${CLICKOS_BR} --build-arg CLICKOS_REPO=${CLICKOS_REPO} \
         --build-arg MINIOS_BR=${MINIOS_BR} --build-arg MINIOS_REPO=${MINIOS_REPO} \
         --build-arg TOOLCHAIN_BR=${TOOLCHAIN_BR} --build-arg TOOLCHAIN_REPO=${TOOLCHAIN_REPO} \
         --build-arg XEN_BR=${XEN_BR} --build-arg XEN_REPO=${XEN_REPO} \
@@ -44,8 +38,6 @@ build-partial-cache:
   script:
     - docker pull ${DOCKER_IMG}:${TAG} || true
     - "docker build -f Dockerfile --rm --compress --build-arg CACHE_TWEAK=$(date) \ 
-        --build-arg EXTRA_FLAGS=\"${EXTRA_FLAGS}\" --build-arg STATS_LEVEL=${STATS_LEVEL} \
-        --build-arg CLICKOS_BR=${CLICKOS_BR} --build-arg CLICKOS_REPO=${CLICKOS_REPO} \
         --build-arg MINIOS_BR=${MINIOS_BR} --build-arg MINIOS_REPO=${MINIOS_REPO} \
         --build-arg TOOLCHAIN_BR=${TOOLCHAIN_BR} --build-arg TOOLCHAIN_REPO=${TOOLCHAIN_REPO} \
         --build-arg XEN_BR=${XEN_BR} --build-arg XEN_REPO=${XEN_REPO} \
