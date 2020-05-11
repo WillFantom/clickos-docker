@@ -41,34 +41,8 @@ RUN make -j all
 ENV LWIP_ROOT "${TOOLCHAIN_ROOT}/x86_64-root/x86_64-xen-elf"
 ENV NEWLIB_ROOT "${TOOLCHAIN_ROOT}/x86_64-root/x86_64-xen-elf"
 
-## Allow for Partial Caching
-ARG CACHE_TWEAK="Add the date to this arg to break the cache here"
+## Create ClickOS Root
+RUN mkdir ${CLICKOS_ROOT}
 
-## Pull ClickOS
-ARG CLICKOS_BR=persistent-grants
-ARG CLICKOS_REPO=https://gitlab.com/willfantom/clickos
-RUN git clone -b ${CLICKOS_BR} ${CLICKOS_REPO} ${CLICKOS_ROOT}
-
-## Build ClickOS
-ARG EXTRA_FLAGS=""
-ARG STATS_LEVEL=0
 WORKDIR ${CLICKOS_ROOT}
-RUN ./configure --with-xen=${XEN_ROOT} \
-                --with-minios=${MINIOS_ROOT} \
-                --with-newlib=${NEWLIB_ROOT} \
-                --with-lwip=${LWIP_ROOT} \
-                --enable-minios \
-                --enable-stats=${STATS_LEVEL} \
-                ${EXTRA_FLAGS}
-RUN make -j elemlist
-RUN make -j $(getconf _NPROCESSORS_ONLN) minios
-RUN mkdir -p /out \
- && mv ${CLICKOS_ROOT}/minios/build/* /out
-
-## Multi-Stage Niceness
-FROM alpine:latest
-
-COPY --from=builder /out /clickos
-RUN mkdir -p /output
-
-ENTRYPOINT [ "cp", "-R", "/clickos", "/output" ]
+ENTRYPOINT [ "/bin/bash" ]
