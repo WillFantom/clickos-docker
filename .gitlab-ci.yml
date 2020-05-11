@@ -32,8 +32,8 @@ build:
         --build-arg MINIOS_BR=${MINIOS_BR} --build-arg MINIOS_REPO=${MINIOS_REPO} \
         --build-arg TOOLCHAIN_BR=${TOOLCHAIN_BR} --build-arg TOOLCHAIN_REPO=${TOOLCHAIN_REPO} \
         --build-arg XEN_BR=${XEN_BR} --build-arg XEN_REPO=${XEN_REPO} \
-        --tag ${DOCKER_IMG}:${TAG} ."
-    - docker push ${DOCKER_IMG}:${TAG}
+        --tag ${DOCKER_IMG}:${CI_COMMIT_REF_NAME} ."
+    - docker push ${DOCKER_IMG}:${CI_COMMIT_REF_NAME}
 
 build-partial-cache:
   stage: build
