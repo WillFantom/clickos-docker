@@ -21,7 +21,7 @@ ENV MINIOS_ROOT ${BASE_DIR}/minios
 ENV CLICKOS_ROOT ${BASE_DIR}/clickos
 
 ## Xen Hypervisor Code
-ARG XEN_BR=stable-4.11
+ARG XEN_BR=stable-4.13
 ARG XEN_REPO=https://github.com/xen-project/xen
 RUN git clone -b ${XEN_BR} ${XEN_REPO} ${XEN_ROOT}
 
@@ -46,7 +46,7 @@ ARG CACHE_TWEAK="Add the date to this arg to break the cache here"
 
 ## Pull ClickOS
 ARG CLICKOS_BR=persistent-grants
-ARG CLICKOS_REPO=https://github.com/willfantom/clickos
+ARG CLICKOS_REPO=https://gitlab.com/willfantom/clickos
 RUN git clone -b ${CLICKOS_BR} ${CLICKOS_REPO} ${CLICKOS_ROOT}
 
 ## Build ClickOS
