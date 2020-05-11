@@ -2,6 +2,8 @@
 
 Container that can be used to build ClickOS unikernel images in a reproducible manner.
 
+This branch `clickos-dev` is to be used for ClickOS development. For this, no ClickOS is pulled in via the dockerfile. It is instead expected that ClickOS will be provided via a shared volume.
+
 ## Running
 
 To build, simply run the following command:
@@ -10,20 +12,29 @@ To build, simply run the following command:
 docker build --rm --no-cache -f Dockerfile -t clickos:dev .
 ```
 
-To get the images:
+OR just pull the version from dockerhub (be aware, this uses default values for the XEN and MINIOS versions):
 
 ```bash
-docker run --rm -v $(pwd):/output clickos:dev
+docker pull willfantom/clickos:clickos-dev
+```
+
+To start the development container:
+(This assumes that you are in your working ClickOS directory)
+
+```bash
+docker run --rm -v $(pwd):/sources/clickos clickos:dev
 ```
 
 ## Args
 
 The build can be modified using build args in the following ways:
 
-- Repos and Branches
-  - Set the repo and/or branch of sources with args such as `CLICKOS_REPO` and `CLICKOS_BR`
- - Set extra configure flags for ClickOS with `EXTRA_FLAGS`
- - Set the stats collection level in ClickOS with `STATS_LEVEL`
+- Repos and Branches:
+  - MINIOS_REPO
+  - MINIOS_BR
+  - XEN_REPO
+  - XEN_BR
+(Theses are pretty self explanatory)
 
 ## CI Info
 
