@@ -21,7 +21,7 @@ ENV MINIOS_ROOT ${BASE_DIR}/minios
 ENV CLICKOS_ROOT ${BASE_DIR}/clickos
 
 ## Xen Hypervisor Code
-ARG XEN_BR=stable-4.14
+ARG XEN_BR=RELEASE-4.11.4
 ARG XEN_REPO=https://github.com/xen-project/xen
 RUN git clone -b ${XEN_BR} ${XEN_REPO} ${XEN_ROOT}
 
@@ -41,8 +41,34 @@ RUN make -j all
 ENV LWIP_ROOT "${TOOLCHAIN_ROOT}/x86_64-root/x86_64-xen-elf"
 ENV NEWLIB_ROOT "${TOOLCHAIN_ROOT}/x86_64-root/x86_64-xen-elf"
 
-## Create ClickOS Root
-RUN mkdir ${CLICKOS_ROOT}
+## Allow for Partial Caching
+ARG CACHE_TWEAK="Add the date to this arg to break the cache here"
 
+## Pull ClickOS
+ARG CLICKOS_BR=latest
+ARG CLICKOS_REPO=https://github.com/willfantom/clickos
+RUN git clone -b ${CLICKOS_BR} ${CLICKOS_REPO} ${CLICKOS_ROOT}
+
+## Build ClickOS
+ARG EXTRA_FLAGS=""
+ARG STATS_LEVEL=0
 WORKDIR ${CLICKOS_ROOT}
-ENTRYPOINT [ "/bin/bash" ]
+RUN ./configure --with-xen=${XEN_ROOT} \
+                --with-minios=${MINIOS_ROOT} \
+                --with-newlib=${NEWLIB_ROOT} \
+                --with-lwip=${LWIP_ROOT} \
+                --enable-minios \
+                --enable-stats=${STATS_LEVEL} \
+                ${EXTRA_FLAGS}
+RUN make -j elemlist
+RUN make -j $(getconf _NPROCESSORS_ONLN) minios
+RUN mkdir -p /out \
+ && mv ${CLICKOS_ROOT}/minios/build/* /out
+
+## Multi-Stage Niceness
+FROM alpine:latest
+
+COPY --from=builder /out /clickos
+RUN mkdir -p /output
+
+ENTRYPOINT [ "cp", "-R", "/clickos", "/output" ]
