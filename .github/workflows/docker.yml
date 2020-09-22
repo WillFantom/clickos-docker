@@ -43,8 +43,8 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/${{ steps.extract_owner.outputs.owner }}/clickos:latest
-            docker.io/${{ secrets.DOCKER_USERNAME }}/clickos:latest
+            ghcr.io/${{ steps.extract_owner.outputs.owner }}/clickos:sysml
+            docker.io/${{ secrets.DOCKER_USERNAME }}/clickos:sysml
           no-cache: true
       -
         name: Build and Push
@@ -55,6 +55,6 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/${{ steps.extract_owner.outputs.owner }}/clickos:dev
-            docker.io/${{ secrets.DOCKER_USERNAME }}/clickos:dev
+            ghcr.io/${{ steps.extract_owner.outputs.owner }}/clickos:development
+            docker.io/${{ secrets.DOCKER_USERNAME }}/clickos:development
           no-cache: true
